@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: mariadb:latest
+    container_name: blog-mvc-db
+    environment:
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_ROOT_PASSWORD=${DB_PASSWORD}
+      - TZ=${TZ}
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    ports:
+      - 7777:8080
