@@ -59,7 +59,7 @@ export const cargarNoticias = async (req: Request, res:Response) => {
 		})
 		// const noticia2 = JSON.stringify(noticia)
 
-		console.log(noticia)
+		// console.log(noticia)
 		const nombre = 'Usuario';
 
 		res.render('home/index', {noticia, nombre})
