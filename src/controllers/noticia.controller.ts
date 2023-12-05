@@ -20,15 +20,15 @@ export const crearNoticia = async (req: Request, res: Response) => {
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
 
 		const noticia = await noticiaRepository.create({
-			titulo: data.titulo_noticia,
-			contenido: data.desc_noticia
+			...data,
 		});
-		
-		const result = await noticiaRepository.save(noticia);
 
-		if (data.titulo_noticia.trim() === '' || data.desc_noticia.trim() === '') {
+		if (data.titulo.trim() === '' || data.contenido.trim() === '') {
 			res.render('shared/error');
+			return;
 		}
+
+		const result = await noticiaRepository.save(noticia);
 
 		// logger.debug(
 		// 	`El usuario con nombre : ${req.usuario.nombre} ${
@@ -43,30 +43,25 @@ export const crearNoticia = async (req: Request, res: Response) => {
 	}
 };
 
-export const cargarNoticias = async (req: Request, res:Response) => {
+export const cargarNoticias = async (req: Request, res: Response) => {
 	try {
 		const titulo = req.query.titulo_noticia?.toString();
 		const contenido = req.query.desc_noticia?.toString();
 		const idNoticia = req.query.id?.toString();
-		const noticiaRepository = await dbcontext.getRepository(Noticia)
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 
-		const noticia= await noticiaRepository.find({
-			where:{
-				titulo: ILike(`%${titulo || ''}%`),
-				contenido: ILike(`%${contenido || ''}%`),
-				id: idNoticia,
-			}
-		})
+		const noticia = await noticiaRepository.find({
+			order: {
+				create_at: 'DESC',
+			},
+			take: 10,
+		});
 		// const noticia2 = JSON.stringify(noticia)
 
 		// console.log(noticia)
-		const nombre = 'Usuario';
 
-		res.render('home/index', {noticia, nombre})
-		
+		res.render('home/index_view_noticias', { noticia, total: noticia.length});
 	} catch (error) {
-		
+		console.log(error);
 	}
-	
-}
-
+};

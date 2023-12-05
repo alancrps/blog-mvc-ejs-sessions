@@ -18,7 +18,7 @@ export class Noticia {
 	@Column()
 	titulo: string;
 
-	@Column()
+	@Column({ length: 1000 })
 	contenido: string;
 
 	@CreateDateColumn()
