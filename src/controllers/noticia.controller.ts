@@ -5,10 +5,10 @@ import { Noticia } from '../models/noticias.entity';
 import logger from '../helpers/logger';
 import { ILike } from 'typeorm';
 
-export const noticiasIndex = (req: Request, res: Response) => {
-	const nombre = 'Usuario';
-	res.render('home/index', { nombre });
-};
+// export const noticiasIndex = (req: Request, res: Response) => {
+// 	const nombre = 'Usuario';
+// 	res.render('home/index', { nombre });
+// };
 
 export const crearNoticiaView = (req: Request, res: Response) => {
 	res.render('noticias/crear');
@@ -58,10 +58,11 @@ export const cargarNoticias = async (req: Request, res:Response) => {
 			}
 		})
 		// const noticia2 = JSON.stringify(noticia)
-		
-		console.log(noticia)
 
-		res.render('noticias/all', {noticia})
+		console.log(noticia)
+		const nombre = 'Usuario';
+
+		res.render('home/index', {noticia, nombre})
 		
 	} catch (error) {
 		
