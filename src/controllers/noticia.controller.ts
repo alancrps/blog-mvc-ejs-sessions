@@ -3,6 +3,7 @@ import { Inoticias_create } from '../interfaces/noticias/noticia.interfaces';
 import { dbcontext } from '../db/dbcontext';
 import { Noticia } from '../models/noticias.entity';
 import logger from '../helpers/logger';
+import { ILike } from 'typeorm';
 
 export const noticiasIndex = (req: Request, res: Response) => {
 	const nombre = 'Usuario';
@@ -25,7 +26,6 @@ export const crearNoticia = async (req: Request, res: Response) => {
 		
 		const result = await noticiaRepository.save(noticia);
 
-		//validación datos en blanco
 		if (data.titulo_noticia.trim() === '' || data.desc_noticia.trim() === '') {
 			res.render('shared/error');
 		}
@@ -42,4 +42,30 @@ export const crearNoticia = async (req: Request, res: Response) => {
 		res.render('shared/error');
 	}
 };
+
+export const cargarNoticias = async (req: Request, res:Response) => {
+	try {
+		const titulo = req.query.titulo_noticia?.toString();
+		const contenido = req.query.desc_noticia?.toString();
+		const idNoticia = req.query.id?.toString();
+		const noticiaRepository = await dbcontext.getRepository(Noticia)
+
+		const noticia= await noticiaRepository.find({
+			where:{
+				titulo: ILike(`%${titulo || ''}%`),
+				contenido: ILike(`%${contenido || ''}%`),
+				id: idNoticia,
+			}
+		})
+		// const noticia2 = JSON.stringify(noticia)
+		
+		console.log(noticia)
+
+		res.render('noticias/all', {noticia})
+		
+	} catch (error) {
+		
+	}
+	
+}
 
