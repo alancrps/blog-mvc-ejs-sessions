@@ -17,12 +17,12 @@ export const crearNoticia = async (req: Request, res: Response) => {
 	try {
 		const data: Inoticias_create = req.body;
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
-		
-		const noticia = await noticiaRepository.create({
-			...data,
-			usuario: { id: req.usuario.id },
-		});
 
+		const noticia = await noticiaRepository.create({
+			titulo: data.titulo_noticia,
+			contenido: data.desc_noticia
+		});
+		
 		const result = await noticiaRepository.save(noticia);
 
 		//validación datos en blanco
@@ -30,13 +30,11 @@ export const crearNoticia = async (req: Request, res: Response) => {
 			res.render('shared/error');
 		}
 
-		res.json({ msg: `Se creó la noticia con el id: ${result.id}` });
-
-		logger.debug(
-			`El usuario con nombre : ${req.usuario.nombre} ${
-				req.usuario.apellido
-			} creo la noticia ${JSON.stringify(data)}`
-		);
+		// logger.debug(
+		// 	`El usuario con nombre : ${req.usuario.nombre} ${
+		// 		req.usuario.apellido
+		// 	} creo la noticia ${JSON.stringify(data)}`
+		// );
 
 		res.redirect('/noticias');
 	} catch (error) {

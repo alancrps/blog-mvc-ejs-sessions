@@ -30,6 +30,6 @@ export class Noticia {
 	@OneToMany(() => Comentario, (c) => c.noticia)
 	comentarios: Comentario[];
 
-	@ManyToOne(() => Usuarios, (u) => u.noticias, { nullable: false })
+	@ManyToOne(() => Usuarios, (u) => u.noticias, { nullable: true })
 	usuario: Usuarios;
 }
