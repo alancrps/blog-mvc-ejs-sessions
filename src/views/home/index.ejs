@@ -27,9 +27,11 @@
 		</div>
 	</div>
 </div>
-<% noticia.forEach(function(n){ %>
-    <ul>
-        <li><%= n.titulo %></li>
-        <li><%= n.contenido %></li>
-    </ul>
-<% }); %>
+<div>
+	<% noticia.forEach(function(n){ %>
+		<ul>
+			<li>Titulo: <%= n.titulo %></li>
+			<li>Descripción: <%= n.contenido %></li>
+		</ul>
+	<% }); %>
+</div>
