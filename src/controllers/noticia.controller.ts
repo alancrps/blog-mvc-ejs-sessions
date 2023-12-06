@@ -5,11 +5,6 @@ import { Noticia } from '../models/noticias.entity';
 import logger from '../helpers/logger';
 import { ILike } from 'typeorm';
 
-// export const noticiasIndex = (req: Request, res: Response) => {
-// 	const nombre = 'Usuario';
-// 	res.render('home/index', { nombre });
-// };
-
 export const crearNoticiaView = (req: Request, res: Response) => {
 	res.render('noticias/crear');
 };
@@ -45,12 +40,9 @@ export const crearNoticia = async (req: Request, res: Response) => {
 
 export const cargarNoticias = async (req: Request, res: Response) => {
 	try {
-		const titulo = req.query.titulo_noticia?.toString();
-		const contenido = req.query.desc_noticia?.toString();
-		const idNoticia = req.query.id?.toString();
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
 
-		const noticia = await noticiaRepository.find({
+		const noticias = await noticiaRepository.find({
 			order: {
 				create_at: 'DESC',
 			},
@@ -60,7 +52,29 @@ export const cargarNoticias = async (req: Request, res: Response) => {
 
 		// console.log(noticia)
 
-		res.render('home/index_view_noticias', { noticia, total: noticia.length});
+		res.render('home/index_view_noticias', {
+			noticias,
+			total: noticias.length,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const getNoticiaById = async (req: Request, res: Response) => {
+	try {
+		const titulo = req.query.titulo_noticia?.toString();
+		const contenido = req.query.desc_noticia?.toString();
+		const idNoticia = req.query.id?.toString();
+		// console.log(req.params);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
+		const noticia = await noticiaRepository.find({
+			where:{
+				id: idNoticia,
+			}
+		});
+		console.log(noticia);
+		res.render('noticias/noticia', { noticia });
 	} catch (error) {
 		console.log(error);
 	}

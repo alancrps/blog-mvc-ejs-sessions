@@ -4,19 +4,21 @@
 			class="row p-5 pb-0 pt-lg-5 align-items-center rounded-3 border shadow-lg"
 		>
 			<h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-4">Noticias</h1>
-			<div class=" justify-content-md-start mb-4 mb-lg-2">
-				<hr class="hr" />
-				<div>
-					<% noticia.forEach(function(n){ %>
-					<div>
-						<h3><%= n.titulo %></h3>
-						<p><%= n.contenido %></p>
-					</div>
-					<button type="button" class="btn btn-outline-primary">Ir a noticia</button>
+			
+				<div class="justify-content-md-start mb-4 mb-lg-2">
 					<hr class="hr" />
-					<% }); %>
-				</>
-			</div>
+					<div>
+						<% noticias.forEach(noticia =>{ %>
+						<div>
+							<p><%= noticia.create_at %></p>
+							<h3><%= noticia.titulo %></h3>
+							<p><%= noticia.contenido %></p>
+						</div>
+							<a class="btn btn-primary btn-rounded" href="/noticias/<%= noticia.id %>">Ir a Noticia</a>
+						<hr class="hr" />
+						<% }); %>
+					</div>
+				</div>
 		</div>
 	</div>
 </div>
