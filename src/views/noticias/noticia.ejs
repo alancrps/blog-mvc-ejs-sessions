@@ -1,3 +1,6 @@
-    <p><%= noticia.id %></p>
-    <p><%= noticia %></p>
-    <p><%= noticia %></p>
+
+<ul>
+<% for (const n in noticia){ %>
+    <li><%= n %>: <%= noticia[n]%></li>
+<% } %>
+</ul>

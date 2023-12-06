@@ -63,17 +63,16 @@ export const cargarNoticias = async (req: Request, res: Response) => {
 
 export const getNoticiaById = async (req: Request, res: Response) => {
 	try {
-		const titulo = req.query.titulo_noticia?.toString();
-		const contenido = req.query.desc_noticia?.toString();
-		const idNoticia = req.query.id?.toString();
-		// console.log(req.params);
+		const idNoticia = req.params.id?.toString();
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
-		const noticia = await noticiaRepository.find({
+
+		const noticia = await noticiaRepository.findOne({
 			where:{
 				id: idNoticia,
 			}
 		});
 		console.log(noticia);
+
 		res.render('noticias/noticia', { noticia });
 	} catch (error) {
 		console.log(error);
