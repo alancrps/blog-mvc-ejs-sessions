@@ -7,14 +7,16 @@
 			
 				<div class="justify-content-md-start mb-4 mb-lg-2">
 					<hr class="hr" />
-					<div>
+					<div style="cursor: pointer;">
 						<% noticias.forEach(noticia =>{ %>
 						<div>
 							<p><%= noticia.create_at %></p>
 							<h3><%= noticia.titulo %></h3>
-							<p><%= noticia.contenido %></p>
+							<p class="lead"><%= limitadorTexto(noticia.contenido, 300) %></p>
 						</div>
-							<a class="btn btn-primary btn-rounded" href="/noticias/<%= noticia.id %>">Ir a Noticia</a>
+						<div>
+							<a class="btn btn-primary btn-rounded" href="noticias/get/<%= noticia.id %>">Ir a Noticia</a>
+						</div>
 						<hr class="hr" />
 						<% }); %>
 					</div>

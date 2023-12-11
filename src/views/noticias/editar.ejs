@@ -1,8 +1,8 @@
 <div id="formulario-crear-noticia">
-	<form name="noticia" action="/noticias/crear" method="POST">
+	<form name="noticia" action="/noticias/editar/<%= noticia.id %>" method="POST">
 		<div class="mb-3">
 			<label for="titulo" class="form-label">Titulo</label>
-			<input type="text" class="form-control" name="titulo" />
+			<input type="text" class="form-control" name="titulo" value="<%= noticia.titulo%>"/>
 		</div>
 		<div class="mb-3">
 			<label for="contenido" class="form-label">Descripción</label>
@@ -11,7 +11,7 @@
 				class="form-control"
 				rows="5"
 				placeholder="Ingrese el contenido..."
-			></textarea>
+			><%= noticia.contenido%></textarea>
 		</div>
 		<button type="submit" class="btn btn-primary">Guardar</button>
 	</form>

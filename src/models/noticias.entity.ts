@@ -1,4 +1,5 @@
 import {
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { Comentario } from './comentarios.entity';
 import { Usuarios } from './usuarios.entity';
+import moment from 'moment';
 
 @Entity()
 export class Noticia {
@@ -32,4 +34,11 @@ export class Noticia {
 
 	@ManyToOne(() => Usuarios, (u) => u.noticias, { nullable: true })
 	usuario: Usuarios;
+
+	@BeforeInsert()
+	async fechaFormateada() {
+		// this.create_at = await moment(this.create_at).format('DD-MM-YYYY');
+		// console.log(this.create_at)
+		
+	}
 }
