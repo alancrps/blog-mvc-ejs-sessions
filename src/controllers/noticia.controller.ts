@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
-import { Inoticias_create } from '../interfaces/noticias/noticia.interfaces';
+import {
+	Inoticias_create,
+	Inoticias_update,
+} from '../interfaces/noticias/noticia.interfaces';
 import { dbcontext } from '../db/dbcontext';
 import { Noticia } from '../models/noticias.entity';
 import logger from '../helpers/logger';
-import { ILike } from 'typeorm';
-import moment from 'moment';
+import { ILike, IsNull } from 'typeorm';
+import { format, isValid } from 'date-fns';
 
 export const crearNoticiaView = (req: Request, res: Response) => {
 	res.render('noticias/crear');
@@ -41,6 +44,9 @@ export const cargarNoticias = async (req: Request, res: Response) => {
 				create_at: 'DESC',
 			},
 			take: 10,
+			where: {
+				delete_at: IsNull(),
+			},
 		});
 
 		res.render('home/index_view_noticias', {
@@ -60,8 +66,6 @@ export const getNoticiaById = async (req: Request, res: Response) => {
 		const noticia = await noticiaRepository.findOneBy({
 			id: idNoticia,
 		});
-		// console.log(noticia);
-
 		res.render('noticias/noticia', { noticia });
 	} catch (error) {
 		console.log(error);
@@ -76,10 +80,18 @@ export const listadoNoticias = async (req: Request, res: Response) => {
 			order: {
 				create_at: 'DESC',
 			},
+			withDeleted: true,
 		});
-		res.render('noticias/listado', { noticias });
+		const noticiasFormateadas = noticias.map(noticia => ({
+            ...noticia,
+			create_at: format(noticia.create_at, 'dd/MM/yyyy HH:mm'),
+            updated_at: format(noticia.updated_at, 'dd/MM/yyyy HH:mm'),
+            delete_at: isValid(noticia.delete_at) ? format(noticia.delete_at, 'dd/MM/yyyy HH:mm') : null,
+        }));
+		res.render('noticias/listado', { noticias:noticiasFormateadas });
 	} catch (error) {
 		console.log(error);
+		res.render('shared/error');
 	}
 };
 
@@ -89,23 +101,74 @@ export const editarNoticiaView = async (req: Request, res: Response) => {
 
 		const noticiaRepository = dbcontext.getRepository(Noticia);
 
-		const noticia = await noticiaRepository.findOneBy({
-			id: idNoticia,
+		const noticia = await noticiaRepository.findOne({
+			where: {
+				id: idNoticia,
+			},
 		});
-
-		
+		if (!noticia) {
+			res.render('shared/error');
+		}
 		res.render('noticias/editar', { noticia });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
+		res.render('shared/error');
 	}
 };
 
 export const editarNoticia = async (req: Request, res: Response) => {
-	const idNoticia = req.params.idNoticia;
-	const data: Inoticias_create = req.body
-	const noticiaRepository = dbcontext.getRepository(Noticia);
-	const noticiaActualizada = await noticiaRepository.update(idNoticia, data)
-	res.status(200).redirect('/noticias');
+	try {
+		const idNoticia = req.params.idNoticia;
+		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticia = await noticiaRepository.exist({
+			where: {
+				id: idNoticia,
+			},
+		});
+		if (!noticia) {
+			res.render('shared/error');
+		}
+		const editarNoticia: Inoticias_update = {
+			titulo: req.body.titulo,
+			contenido: req.body.contenido,
+		};
+		await noticiaRepository.update(req.params.idNoticia, editarNoticia);
+
+		res.status(200).redirect('/noticias/listado');
+	} catch (error) {
+		console.log(error);
+		res.render('shared/error');
+	}
+};
+
+export const eliminarNoticia = async (req: Request, res: Response) => {
+	try {
+		const idNoticia = req.params.idNoticia;
+		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticia = await noticiaRepository.findOne({
+			where: {
+				id: idNoticia,
+			},
+		});
+		if (!noticia) {
+			res.render('shared/error');
+		}
+		await noticiaRepository.softDelete(idNoticia);
+		res.redirect('/noticias/listado');
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const recuperarNoticia = async (req: Request, res: Response) => {
+	try {
+		const idNoticia = req.params.idNoticia;
+		const noticiaRepository = dbcontext.getRepository(Noticia);
+		await noticiaRepository.restore(idNoticia);
+		res.redirect('/noticias/listado');
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const limitadorTexto = (text: string, maxLength: number) => {

@@ -37,8 +37,8 @@ export class Usuarios {
 	@OneToMany(() => Noticia, (n) => n.usuario)
 	noticias: Noticia[];
 
-	@BeforeInsert()
-	async hashPassword() {
-		this.pass = await bcrypt.hash(this.pass, 10);
-	}
+	// @BeforeInsert()
+	// async hashPassword() {
+	// 	this.pass = await bcrypt.hash(this.pass, 10);
+	// }
 }

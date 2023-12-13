@@ -2,6 +2,7 @@ import {
 	BeforeInsert,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	ManyToOne,
 	OneToMany,
@@ -10,7 +11,6 @@ import {
 } from 'typeorm';
 import { Comentario } from './comentarios.entity';
 import { Usuarios } from './usuarios.entity';
-import moment from 'moment';
 
 @Entity()
 export class Noticia {
@@ -29,6 +29,9 @@ export class Noticia {
 	@UpdateDateColumn()
 	updated_at: Date;
 
+	@DeleteDateColumn()
+	delete_at: Date;
+	
 	@OneToMany(() => Comentario, (c) => c.noticia)
 	comentarios: Comentario[];
 
