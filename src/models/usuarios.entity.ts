@@ -2,6 +2,7 @@ import {
 	BeforeInsert,
 	Column,
 	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	OneToMany,
 	PrimaryGeneratedColumn,
@@ -20,25 +21,35 @@ export class Usuarios {
 	email: string;
 
 	@Column()
-	pass: string;
+	password: string;
 
 	@Column()
 	nombre: string;
 
 	@Column()
 	apellido: string;
-
+	
 	@CreateDateColumn()
 	create_at: Date;
 
 	@UpdateDateColumn()
 	updated_at: Date;
 
+	@DeleteDateColumn()
+	delete_at: Date;
+
 	@OneToMany(() => Noticia, (n) => n.usuario)
 	noticias: Noticia[];
 
-	// @BeforeInsert()
-	// async hashPassword() {
-	// 	this.pass = await bcrypt.hash(this.pass, 10);
-	// }
+	@BeforeInsert()
+	async hashPassword() {
+		this.password = await bcrypt.hash(this.password, 10);
+	}
+
+	@BeforeInsert()
+	async toLowerCaseNormalize (){
+		this.nombre = this.nombre.toLowerCase();
+		this.apellido = this.apellido.toLowerCase();
+		this.email = this.email.toLowerCase();
+	}
 }

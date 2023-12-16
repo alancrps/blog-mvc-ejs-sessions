@@ -1,25 +1,67 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="/noticias">BP</a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/noticias">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/noticias/crear">Crear Noticia</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/noticias/listado">Listado Noticias</a>
-                </li>
-            </ul>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient ">
+	<div class="container">
+		<a class="navbar-brand" href="/noticias">BLOG</a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-toggle="collapse"
+			data-target="#navbarsExample07"
+			aria-controls="navbarsExample07"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarsExample07">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="/noticias"
+						><i class="bi bi-house-fill"></i> Home</a
+					>
+				</li>
+				<li class="nav-item dropdown" >
+					<a
+						class="nav-link dropdown-toggle"
+						href="#"
+						role="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						Noticias
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a class="dropdown-item d-flex gap-2 align-items-center" href="/noticias/listado"><i class="d-inline-block text-primary p-1 bi bi-database-fill"></i>Listado</a>
+							
+						</li>
+						<li><a class="dropdown-item d-flex gap-2 align-items-center" href="/noticias/crear"><i class="d-inline-block text-primary p-1 bi bi-database-fill-add"></i>Crear</a></li>
+					</ul>
+				</li>
+				<!-- Usuarios -->
+				<li class="nav-item dropdown">
+					<a
+						class="nav-link dropdown-toggle"
+						href="#"
+						role="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						Usuarios
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a class="dropdown-item d-flex gap-2 align-items-center" href="/usuarios/listado"><i class="d-inline-block text-primary p-1 bi bi-people-fill"></i>Listado</a>
+						</li>
+						<li><a class="dropdown-item d-flex gap-2 align-items-center" href="/usuarios/crear"><i class="d-inline-block text-primary p-1 bi bi-person-plus-fill"></i>Crear</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
         <div>
-            <a class="nav-link" href="/auth/login">Login<i class="bi bi-box-arrow-in-right"></i></a>
-        </div>
-    </div>
+			<a role="button" class="text-decoration-none text-light nav-link" href="/auth/login"
+				>Login<i class="bi bi-box-arrow-in-right"></i
+			></a>
+		</div>
+	</div>
 </nav>

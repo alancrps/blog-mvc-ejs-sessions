@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import authRoutes from './src/routes/auth.routes';
 import expressLayouts from 'express-ejs-layouts';
+import usuariosRoutes from './src/routes/usuario.routes';
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(expressLayouts);
 app.set('layout', path.join(__dirname, 'src/views/shared/layout'));
 
 //Rutas
+app.use('/usuarios', usuariosRoutes)
 app.use('/noticias', noticiasRoutes);
 app.use('/auth', authRoutes);
 app.use('/', (req: Request, res: Response) => {

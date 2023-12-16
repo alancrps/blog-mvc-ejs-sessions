@@ -35,7 +35,7 @@ export const crearNoticia = async (req: Request, res: Response) => {
 	}
 };
 
-export const cargarNoticias = async (req: Request, res: Response) => {
+export const cargarNoticiasIndex = async (req: Request, res: Response) => {
 	try {
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
 
@@ -49,8 +49,10 @@ export const cargarNoticias = async (req: Request, res: Response) => {
 			},
 		});
 
+		const noticiasFormateadas = formatearFechas(noticias);
+
 		res.render('home/index_view_noticias', {
-			noticias,
+			noticiasFormateadas,
 			limitadorTexto: (text: string, maxLength: number) =>
 				limitadorTexto(text, maxLength),
 		});
@@ -62,10 +64,11 @@ export const cargarNoticias = async (req: Request, res: Response) => {
 export const getNoticiaById = async (req: Request, res: Response) => {
 	try {
 		const idNoticia = req.params.idNoticia;
-		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 		const noticia = await noticiaRepository.findOneBy({
 			id: idNoticia,
 		});
+		
 		res.render('noticias/noticia', { noticia });
 	} catch (error) {
 		console.log(error);
@@ -82,13 +85,9 @@ export const listadoNoticias = async (req: Request, res: Response) => {
 			},
 			withDeleted: true,
 		});
-		const noticiasFormateadas = noticias.map(noticia => ({
-            ...noticia,
-			create_at: format(noticia.create_at, 'dd/MM/yyyy HH:mm'),
-            updated_at: format(noticia.updated_at, 'dd/MM/yyyy HH:mm'),
-            delete_at: isValid(noticia.delete_at) ? format(noticia.delete_at, 'dd/MM/yyyy HH:mm') : null,
-        }));
-		res.render('noticias/listado', { noticias:noticiasFormateadas });
+		const noticiasFormateadas = formatearFechas(noticias)
+
+		res.render('noticias/listado', { noticiasFormateadas});
 	} catch (error) {
 		console.log(error);
 		res.render('shared/error');
@@ -99,7 +98,7 @@ export const editarNoticiaView = async (req: Request, res: Response) => {
 	try {
 		const idNoticia = req.params.idNoticia;
 
-		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 
 		const noticia = await noticiaRepository.findOne({
 			where: {
@@ -119,7 +118,7 @@ export const editarNoticiaView = async (req: Request, res: Response) => {
 export const editarNoticia = async (req: Request, res: Response) => {
 	try {
 		const idNoticia = req.params.idNoticia;
-		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 		const noticia = await noticiaRepository.exist({
 			where: {
 				id: idNoticia,
@@ -132,7 +131,7 @@ export const editarNoticia = async (req: Request, res: Response) => {
 			titulo: req.body.titulo,
 			contenido: req.body.contenido,
 		};
-		await noticiaRepository.update(req.params.idNoticia, editarNoticia);
+		await noticiaRepository.update(idNoticia, editarNoticia);
 
 		res.status(200).redirect('/noticias/listado');
 	} catch (error) {
@@ -144,7 +143,7 @@ export const editarNoticia = async (req: Request, res: Response) => {
 export const eliminarNoticia = async (req: Request, res: Response) => {
 	try {
 		const idNoticia = req.params.idNoticia;
-		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 		const noticia = await noticiaRepository.findOne({
 			where: {
 				id: idNoticia,
@@ -163,7 +162,7 @@ export const eliminarNoticia = async (req: Request, res: Response) => {
 export const recuperarNoticia = async (req: Request, res: Response) => {
 	try {
 		const idNoticia = req.params.idNoticia;
-		const noticiaRepository = dbcontext.getRepository(Noticia);
+		const noticiaRepository = await dbcontext.getRepository(Noticia);
 		await noticiaRepository.restore(idNoticia);
 		res.redirect('/noticias/listado');
 	} catch (error) {
@@ -178,3 +177,12 @@ const limitadorTexto = (text: string, maxLength: number) => {
 	}
 	return text;
 };
+
+const formatearFechas = (noticias: Noticia[])=>{
+	return noticias.map(noticia => ({
+		...noticia,
+		create_at: format(noticia.create_at, 'dd/MM/yyyy HH:mm'),
+		updated_at: format(noticia.updated_at, 'dd/MM/yyyy HH:mm'),
+		delete_at: isValid(noticia.delete_at) ? format(noticia.delete_at, 'dd/MM/yyyy HH:mm' ) : null,
+	}))
+}

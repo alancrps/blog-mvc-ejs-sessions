@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-	cargarNoticias,
+	cargarNoticiasIndex,
 	crearNoticia,
 	crearNoticiaView,
 	editarNoticia,
@@ -13,7 +13,7 @@ import {
 
 const noticiasRoutes = express.Router();
 
-noticiasRoutes.get('/', cargarNoticias);
+noticiasRoutes.get('/', cargarNoticiasIndex);
 
 noticiasRoutes.get('/crear', crearNoticiaView);
 noticiasRoutes.post('/crear', crearNoticia);

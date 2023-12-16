@@ -1,7 +1,12 @@
-export interface IUsuarios {
+export interface IUsuarios_create {
     id?: string,
+    email?:string
+    password?:string,
+    password2?: string;
     nombre:string,
     apellido: string,
-    password?:string,
-    email:string
+}
+
+export interface IUsuarios_update extends IUsuarios_create {
+    
 }
