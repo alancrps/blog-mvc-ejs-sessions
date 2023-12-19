@@ -42,6 +42,9 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use(expressLayouts);
 app.set('layout', path.join(__dirname, 'src/views/shared/layout'));
 
+//static files
+app.use('/public', express.static('public'))
+
 //Rutas
 app.use('/usuarios', usuariosRoutes)
 app.use('/noticias', noticiasRoutes);

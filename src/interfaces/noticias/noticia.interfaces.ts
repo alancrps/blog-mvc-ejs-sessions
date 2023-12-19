@@ -1,5 +1,6 @@
 export interface Inoticias_create {
 	titulo: string;
+	imageURL?: string,
 	contenido: string;
 }
 

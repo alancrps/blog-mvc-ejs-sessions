@@ -17,21 +17,19 @@ export const crearNoticia = async (req: Request, res: Response) => {
 	try {
 		const data: Inoticias_create = req.body;
 		const noticiaRepository = await dbcontext.getRepository(Noticia);
-
+		if (data.titulo.trim() == '' || data.contenido.trim() == '' || data.imageURL == '') {
+			return res.render('shared/error', { msgError: 'Por favor, completa todos los campos'})
+		}
+		
 		const noticia = await noticiaRepository.create({
 			...data,
 		});
-
-		if (data.titulo.trim() == '' || data.contenido.trim() == '') {
-			throw new Error('Esta vacio');
-		}
-
 		const result = await noticiaRepository.save(noticia);
 
 		res.status(200).redirect('/noticias');
 	} catch (error) {
 		console.log(error);
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al crear la noticia'});
 	}
 };
 
@@ -48,9 +46,9 @@ export const cargarNoticiasIndex = async (req: Request, res: Response) => {
 				delete_at: IsNull(),
 			},
 		});
-
+		
 		const noticiasFormateadas = formatearFechas(noticias);
-
+		
 		res.render('home/index_view_noticias', {
 			noticiasFormateadas,
 			limitadorTexto: (text: string, maxLength: number) =>
@@ -58,6 +56,7 @@ export const cargarNoticiasIndex = async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		console.log(error);
+		res.render('shared/error', { msgError: `Error al cargar las noticias`});
 	}
 };
 
@@ -68,10 +67,19 @@ export const getNoticiaById = async (req: Request, res: Response) => {
 		const noticia = await noticiaRepository.findOneBy({
 			id: idNoticia,
 		});
-		
-		res.render('noticias/noticia', { noticia });
+		if(noticia){
+			//En cada salto de linea se reemplaza por un <br>
+			noticia.contenido = noticia.contenido.replace(/\n/g, '<br>');
+			
+			const formatearFechaNoticia = formatearFecha(noticia)
+			res.render('noticias/noticia', { noticia: formatearFechaNoticia });
+		}
+		else{
+			res.render('shared/error', { msgError: `No se pudo encontrar la noticia`});
+		}
 	} catch (error) {
 		console.log(error);
+		res.render('shared/error', { msgError: `Error al obtener la noticia`});
 	}
 };
 
@@ -86,11 +94,11 @@ export const listadoNoticias = async (req: Request, res: Response) => {
 			withDeleted: true,
 		});
 		const noticiasFormateadas = formatearFechas(noticias)
-
+		
 		res.render('noticias/listado', { noticiasFormateadas});
 	} catch (error) {
 		console.log(error);
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al obtener las noticias'})
 	}
 };
 
@@ -106,12 +114,12 @@ export const editarNoticiaView = async (req: Request, res: Response) => {
 			},
 		});
 		if (!noticia) {
-			res.render('shared/error');
+			res.render('shared/error', { msgError: 'No se pudo encontrar la noticia'});
 		}
 		res.render('noticias/editar', { noticia });
 	} catch (error) {
 		console.log(error);
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al editar noticia'});
 	}
 };
 
@@ -125,10 +133,11 @@ export const editarNoticia = async (req: Request, res: Response) => {
 			},
 		});
 		if (!noticia) {
-			res.render('shared/error');
+			res.render('shared/error', { msgError: 'No se pudo encontrar la noticia'});
 		}
 		const editarNoticia: Inoticias_update = {
 			titulo: req.body.titulo,
+			imageURL: req.body.imageURL,
 			contenido: req.body.contenido,
 		};
 		await noticiaRepository.update(idNoticia, editarNoticia);
@@ -136,7 +145,7 @@ export const editarNoticia = async (req: Request, res: Response) => {
 		res.status(200).redirect('/noticias/listado');
 	} catch (error) {
 		console.log(error);
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al editar la noticia'});
 	}
 };
 
@@ -150,12 +159,13 @@ export const eliminarNoticia = async (req: Request, res: Response) => {
 			},
 		});
 		if (!noticia) {
-			res.render('shared/error');
+			res.render('shared/error', { msgError: 'No se pudo encontrar la noticia'});
 		}
 		await noticiaRepository.softDelete(idNoticia);
 		res.redirect('/noticias/listado');
 	} catch (error) {
 		console.log(error);
+		res.render('shared/error', { msgError: 'Error al eliminar la noticia'})
 	}
 };
 
@@ -167,6 +177,7 @@ export const recuperarNoticia = async (req: Request, res: Response) => {
 		res.redirect('/noticias/listado');
 	} catch (error) {
 		console.log(error);
+		res.render('shared/error', { msgError: 'Error al recuperar la noticia'})
 	}
 };
 
@@ -186,3 +197,10 @@ const formatearFechas = (noticias: Noticia[])=>{
 		delete_at: isValid(noticia.delete_at) ? format(noticia.delete_at, 'dd/MM/yyyy HH:mm' ) : null,
 	}))
 }
+
+const formatearFecha = (noticia: Noticia) => ({
+	...noticia,
+	create_at: format(noticia.create_at, 'dd/MM/yyyy HH:mm'),
+	updated_at: format(noticia.updated_at, 'dd/MM/yyyy HH:mm'),
+	delete_at: isValid(noticia.delete_at) ? format(noticia.delete_at, 'dd/MM/yyyy HH:mm' ) : null,
+})

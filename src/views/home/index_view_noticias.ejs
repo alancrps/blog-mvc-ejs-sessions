@@ -5,10 +5,9 @@
 		<h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
 			Noticias Recientes
 		</h1>
-
 		<div class="justify-content-md-start mb-4 mb-lg-2">
 			<hr class="hr" />
-			<div style="cursor: pointer">
+			<div class="noticiasHome">
 				<% noticiasFormateadas.forEach(noticia =>{ %>
 				<div>
 					<p class="text-secondary text-start">
@@ -19,9 +18,8 @@
 				</div>
 				<div class="mb-4">
 					<a
-						style="border-radius: 0"
 						role="button"
-						class="btn btn-outline-primary"
+						class="btn btn-outline-primary noticiasBtnHome"
 						href="noticias/get/<%= noticia.id %>"
 						>Seguir leyendo <i class="bi bi-arrow-right"></i
 					></a>

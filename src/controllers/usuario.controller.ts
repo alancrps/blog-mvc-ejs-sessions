@@ -41,6 +41,7 @@ export const crearUsuario = async (req: Request, res: Response) => {
 		res.status(200).redirect('/usuarios/listado');
 	} catch (error) {
 		console.error(error);
+		res.render('shared/error', { msgError: 'Error al crear el usuario'});
 	}
 };
 
@@ -56,20 +57,19 @@ export const editarUsuarioView = async (req: Request, res: Response) => {
 			},
 		});
 		if (!usuario) {
-			res.render('shared/error');
+			res.render('shared/error', { msgError: 'El usuario no existe'});
 		}
 		res.render('usuarios/editar', { usuario });
 	} catch (error) {
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al editar el usuario'});
 	}
 };
 
 export const editarUsuario = async (req: Request, res: Response) => {
 	try {
-		const data: IUsuarios_create = req.body;
+		const data: IUsuarios_update = req.body;
 		if (data.password !== data.password2) {
-			res.render('shared/error');
-			throw new Error('Contraseñas no coinciden');
+			return res.render('shared/error', { msgError: 'Las contraseñas no coinciden'});
 		}
 		const usuarioRepository = await dbcontext.getRepository(Usuarios);
 		const usuario = await usuarioRepository.exist({
@@ -78,7 +78,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
 			},
 		});
 		if (!usuario) {
-			res.render('shared/error');
+			res.render('shared/error', { msgError: 'El usuario no existe'});
 		}
 
 		// // Comparacion pw
@@ -109,7 +109,7 @@ export const editarUsuario = async (req: Request, res: Response) => {
 		res.status(200).redirect('/usuarios/listado');
 	} catch (error) {
 		console.log(error);
-		res.render('shared/error');
+		res.render('shared/error', { msgError: 'Error al editar el usuario'});
 	}
 };
 
@@ -123,12 +123,13 @@ export const eliminarUsuario = async (req: Request, res: Response) => {
 			}
 		})
 		if(!usuario){
-			res.render('shared/error')
+			res.render('shared/error', {msgError: 'No se pudo encontrar el usuario'})
 		}
 		await usuarioRepository.softDelete(idUsuario);
 		res.redirect('/usuarios/listado')
 	} catch (error) {
 		console.log(error)
+		res.render('shared/error', { msgError: 'Error al eliminar el usuario'})
 	}
 }
 
@@ -140,5 +141,6 @@ export const recuperarUsuario = async (req: Request, res: Response) => {
 		res.redirect('/usuarios/listado')
 	} catch (error) {
 		console.log(error)
+		res.render('shared/error', { msgError: 'Error al recuperar el usuario'})
 	}
 }

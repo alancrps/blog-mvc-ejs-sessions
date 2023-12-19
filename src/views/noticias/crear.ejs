@@ -9,14 +9,18 @@
 		<div class="mt-3" id="formulario-crear-noticia">
 			<form name="noticia" action="/noticias/crear" method="POST">
 				<div class="mb-3">
-					<label for="titulo" class="form-label">Titulo</label>
+					<label for="titulo" class="form-label">Titulo:</label>
 					<input type="text" class="form-control" name="titulo" />
 				</div>
 				<div class="mb-3">
-					<label for="contenido" class="form-label">Descripción</label>
+					<label for="imageURL" class="form-label">URL:</label>
+					<input type="text" class="form-control" name="imageURL" />
+				</div>
+				<div class="mb-3">
+					<label for="contenido" class="form-label">Descripción:</label>
 					<textarea
 						name="contenido"
-						class="form-control"
+						class="form-control text-area-contenido"
 						rows="5"
 						placeholder="Ingrese el contenido..."
 					></textarea>
@@ -26,3 +30,4 @@
 		</div>
 	</div>
 </div>
+
