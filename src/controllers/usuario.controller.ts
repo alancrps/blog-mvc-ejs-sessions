@@ -66,6 +66,11 @@ export const editarUsuarioView = async (req: Request, res: Response) => {
 
 export const editarUsuario = async (req: Request, res: Response) => {
 	try {
+		const data: IUsuarios_create = req.body;
+		if (data.password !== data.password2) {
+			res.render('shared/error');
+			throw new Error('Contraseñas no coinciden');
+		}
 		const usuarioRepository = await dbcontext.getRepository(Usuarios);
 		const usuario = await usuarioRepository.exist({
 			where: {
@@ -76,27 +81,31 @@ export const editarUsuario = async (req: Request, res: Response) => {
 			res.render('shared/error');
 		}
 
-		// Comparacion pw
-		const usuarioAComparar = await usuarioRepository.findOneBy({
-			id: req.params.idUsuario,
-		});
-		if (usuarioAComparar) {
-			const comparacion = await bcrypt.compare(
-				req.body.password,
-				usuarioAComparar.password
-			);
-			if (comparacion) {
-				const editarUsuario: IUsuarios_update = {
-					nombre: req.body.nombre,
-					apellido: req.body.apellido,
-				};
-				await usuarioRepository.update(req.params.idUsuario, editarUsuario);
-			} else {
-				console.log('contraseña incorrecta')
-				res.render('shared/error');
-			}
+		// // Comparacion pw
+		// const usuarioAComparar = await usuarioRepository.findOneBy({
+		// 	id: req.params.idUsuario,
+		// });
+		// if (usuarioAComparar) {
+		// 	const comparacion = await bcrypt.compare(
+		// 		req.body.password,
+		// 		usuarioAComparar.password
+		// 	);
+		// 	if (comparacion) {
+		// 		const editarUsuario: IUsuarios_update = {
+		// 			nombre: req.body.nombre,
+		// 			apellido: req.body.apellido,
+		// 		};
+		// 		await usuarioRepository.update(req.params.idUsuario, editarUsuario);
+		// 	} else {
+		// 		console.log('contraseña incorrecta')
+		// 		res.render('shared/error');
+		// 	}
+		// }
+		const editarUsuario: IUsuarios_update = {
+			nombre: req.body.nombre,
+			apellido: req.body.apellido,
 		}
-
+		await usuarioRepository.update(req.params.idUsuario, editarUsuario);
 		res.status(200).redirect('/usuarios/listado');
 	} catch (error) {
 		console.log(error);

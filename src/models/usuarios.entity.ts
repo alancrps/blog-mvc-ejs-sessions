@@ -48,8 +48,6 @@ export class Usuarios {
 
 	@BeforeInsert()
 	async toLowerCaseNormalize (){
-		this.nombre = this.nombre.toLowerCase();
-		this.apellido = this.apellido.toLowerCase();
 		this.email = this.email.toLowerCase();
 	}
 }
