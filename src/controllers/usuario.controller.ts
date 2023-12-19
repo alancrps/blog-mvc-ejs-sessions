@@ -103,3 +103,33 @@ export const editarUsuario = async (req: Request, res: Response) => {
 		res.render('shared/error');
 	}
 };
+
+export const eliminarUsuario = async (req: Request, res: Response) => {
+	try {
+		const idUsuario = req.params.idUsuario;
+		const usuarioRepository = await dbcontext.getRepository(Usuarios)
+		const usuario = await usuarioRepository.findOne({
+			where: {
+				id: idUsuario
+			}
+		})
+		if(!usuario){
+			res.render('shared/error')
+		}
+		await usuarioRepository.softDelete(idUsuario);
+		res.redirect('/usuarios/listado')
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+export const recuperarUsuario = async (req: Request, res: Response) => {
+	try {
+		const idUsuario = req.params.idUsuario;
+		const noticiaRepository = await dbcontext.getRepository(Usuarios);
+		await noticiaRepository.restore(idUsuario);
+		res.redirect('/usuarios/listado')
+	} catch (error) {
+		console.log(error)
+	}
+}

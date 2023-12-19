@@ -4,7 +4,9 @@ import {
 	crearUsuarioView,
 	editarUsuario,
 	editarUsuarioView,
+	eliminarUsuario,
 	listadoUsuarios,
+	recuperarUsuario,
 } from '../controllers/usuario.controller';
 
 const usuariosRoutes = express.Router();
@@ -20,4 +22,9 @@ usuariosRoutes.post('/crear', crearUsuario);
 usuariosRoutes.get('/editar/:idUsuario', editarUsuarioView);
 usuariosRoutes.post('/editar/:idUsuario', editarUsuario);
 
+//eliminación de usuario
+usuariosRoutes.get('/eliminar/:idUsuario', eliminarUsuario)
+
+//recuperación de usuario
+usuariosRoutes.get('/recuperar/:idUsuario', recuperarUsuario)
 export default usuariosRoutes;
