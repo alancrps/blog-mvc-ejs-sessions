@@ -1,12 +1,16 @@
 <div class="container my-5">
-	<div class="row px-5 pb-0 py-lg-4 rounded-3 border shadow-lg">
+	<div class="row px-5 pb-0 py-lg-4 rounded-3 border shadow-lg ">
 		<p class="mt-2 text-end fst-italic text-secondary-emphasis">Creado el: <%= noticia.create_at %></p>
 		<h3 class="text-center my-5"><%= noticia.titulo %></h3>
+		<div class="d-flex justify-content-center">
 			<img
-				class="mx-auto imagen-noticia mb-5"
+				class="imagen-noticia mb-5 img-fluid"
 				src="<%= noticia.imageURL %>"
 				alt=""
 			/>
+			
+		</div>
+		<hr class="hr" />
 		<p class="lead"><%- noticia.contenido %></p>
 	</div>
 </div>

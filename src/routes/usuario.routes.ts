@@ -8,23 +8,24 @@ import {
 	listadoUsuarios,
 	recuperarUsuario,
 } from '../controllers/usuario.controller';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const usuariosRoutes = express.Router();
 
 //carga del listado de usuarios
-usuariosRoutes.get('/listado', listadoUsuarios);
+usuariosRoutes.get('/listado', authMiddleware, listadoUsuarios);
 
 //carga de vista y creacion de usuario
-usuariosRoutes.get('/crear', crearUsuarioView);
-usuariosRoutes.post('/crear', crearUsuario);
+usuariosRoutes.get('/crear', authMiddleware, crearUsuarioView);
+usuariosRoutes.post('/crear', authMiddleware, crearUsuario);
 
 //carga y edición de usuario
-usuariosRoutes.get('/editar/:idUsuario', editarUsuarioView);
-usuariosRoutes.post('/editar/:idUsuario', editarUsuario);
+usuariosRoutes.get('/editar/:idUsuario', authMiddleware, editarUsuarioView);
+usuariosRoutes.post('/editar/:idUsuario', authMiddleware, editarUsuario);
 
 //eliminación de usuario
-usuariosRoutes.get('/eliminar/:idUsuario', eliminarUsuario)
+usuariosRoutes.get('/eliminar/:idUsuario', authMiddleware, eliminarUsuario)
 
 //recuperación de usuario
-usuariosRoutes.get('/recuperar/:idUsuario', recuperarUsuario)
+usuariosRoutes.get('/recuperar/:idUsuario', authMiddleware, recuperarUsuario)
 export default usuariosRoutes;

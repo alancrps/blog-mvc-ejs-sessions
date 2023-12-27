@@ -25,7 +25,6 @@ dbcontext
 
 // Config de cookies y sessions
 app.use(cookieParser());
-
 app.use(
 	session({
 		secret: 'my-secret-key',
@@ -38,6 +37,7 @@ app.use(
 //Configurar EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+
 //EJS layouts
 app.use(expressLayouts);
 app.set('layout', path.join(__dirname, 'src/views/shared/layout'));
@@ -49,6 +49,8 @@ app.use('/public', express.static('public'))
 app.use('/usuarios', usuariosRoutes)
 app.use('/noticias', noticiasRoutes);
 app.use('/auth', authRoutes);
+
+//Ruta default
 app.use('/', (req: Request, res: Response) => {
 	res.redirect('/noticias')
 })

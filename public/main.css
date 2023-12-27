@@ -4,10 +4,10 @@
 .noticiasBtnHome{
     border-radius: 0;
 }
-.imagen-noticia{
+/* .imagen-noticia{
     max-width: 600px;
     max-height: 800px;
-}
+} */
 .text-area-contenido{
     white-space: pre-wrap;
 }

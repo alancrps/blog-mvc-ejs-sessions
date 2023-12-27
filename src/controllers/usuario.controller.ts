@@ -10,19 +10,21 @@ import bcrypt from 'bcrypt';
 export const listadoUsuarios = async (req: Request, res: Response) => {
 	try {
 		const usuarioRepository = await dbcontext.getRepository(Usuarios);
+		const auth_usuario = req.body.usuario;
 		const usuarios = await usuarioRepository.find({
 			order: {
 				create_at: 'DESC',
 			},
 			withDeleted: true,
 		});
-		res.render('usuarios/listado', { usuarios });
+		res.render('usuarios/listado', { usuarios, auth_usuario });
 	} catch (error) {}
 };
 
 export const crearUsuarioView = async (req: Request, res: Response) => {
 	try {
-		res.render('usuarios/crear', {});
+		const auth_usuario = req.body.usuario;
+		res.render('usuarios/crear', {auth_usuario});
 	} catch (error) {}
 };
 
